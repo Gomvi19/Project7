@@ -4,9 +4,7 @@
 package DBHelper;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UniversityDatabase {
     public static void  main(String[] args){
@@ -18,17 +16,63 @@ public class UniversityDatabase {
 
         //perform a query to get all data from the database
         data = db1.getExecuteResult("select * from EngineeringStudents");
-
+        System.out.println("Initial database data");
         //print the results of the query by printing what is stored in arraylist data
-        for(List<Object> row : data){
-            System.out.println(row.toString());
+        printDatabase(data);
+
+        //insert 2 rows to the table
+        db1.insert(12512,"Computer Science","Victor","Gomez",2026,145);
+        db1.insert(12513,"Architecture","John","Doe",2027,12);
+        System.out.println("\n1. Database data inserted");
+
+        //print as a 2D array
+        System.out.println("\n2. Print as a 2d ArrayList");
+        //perform the query once again to get the updated results
+        data = db1.getExecuteResult("select * from EngineeringStudents");
+        printDatabase(data);
+        System.out.println();
+
+        //delete 2 rows of data from the database based on student_ID
+        db1.delete("Student_ID","12512");
+        db1.delete("Student_ID","12513");
+        System.out.println("\n3. Values deleted");
+
+        //print as a DefaultTableModel
+        DefaultTableModel Table = new DefaultTableModel();
+        Table = db1.selectToTable(null,null,null,null,null);
+        String Data = null;
+        System.out.println("\n4. DefaultTableModel after deleting the 2 rows: ");
+        for(int row = 0; row< Table.getRowCount(); row++){
+            for(int column = 0; column< Table.getColumnCount(); column++){
+                System.out.print(Table.getValueAt(row,column).toString() + " | ");
+            }
+            System.out.println();
         }
 
-        //delete a row of data from the database based on student_ID
-        db1.delete("Student_ID","10201");
-        db1.delete("Student_ID","10202");
-        System.out.println("Deleted");
+        //Execute a query to search for all students in the CSE department
+        System.out.println("\n5. Executing query to search for students in the 'CSE' department");
+        data = db1.getExecuteResult("Select * from EngineeringStudents where Department = 'CSE'");
+        System.out.println("\n6. Here are the results of the search query: \n");
+        printDatabase(data);
 
+        //Update 3 values in the table
+        db1.update(db1.UniversityRank,"1",db1.Student_ID,"10201");
+        db1.update(db1.First_Name,"Some new name",db1.Student_ID,"10202");
+        db1.update(db1.Last_Name,"Last name test",db1.Student_ID,"10203");
+        System.out.println("\n7. 3 values have been updated");
+
+        //print as DefaultTableModel
+        DefaultTableModel table = new DefaultTableModel();
+        table = db1.selectToTable(null,null,null,null,null);
+        String data2 = null;
+        System.out.println("\n8. DefaultTableModel to reflect the updated rows: ");
+        for(int row =0;row<table.getRowCount();row++){
+            for(int column = 0;column<table.getColumnCount();column++){
+                System.out.print(table.getValueAt(row,column).toString() + " | ");
+            }
+            System.out.println();
+        }
+        /*
         data = db1.getExecuteResult("select * from EngineeringStudents");
         System.out.println("\nHere are the contents of the database: \n");
         printDatabase(data);
@@ -70,7 +114,7 @@ public class UniversityDatabase {
                 System.out.print(table.getValueAt(row,column).toString() + " | ");
             }
             System.out.println();
-        }
+        }*/
     }
 
 

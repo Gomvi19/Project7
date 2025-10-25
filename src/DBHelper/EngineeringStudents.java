@@ -1,3 +1,4 @@
+//class created by DBHelper it holds support methods to handle SQL statements on a given table
 package DBHelper;
 
 import javax.swing.table.DefaultTableModel;
